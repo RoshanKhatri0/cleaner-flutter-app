@@ -1,8 +1,7 @@
 import 'package:cleaner/models/service.dart';
 import 'package:cleaner/pages/cleaning.dart';
-import 'package:cleaner/provider/auth.dart';
+import 'package:cleaner/provider/cleaning_request_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
 class SelectService extends StatefulWidget {
@@ -22,42 +21,13 @@ class _SelectServiceState extends State<SelectService>
     _tabController = TabController(length: 4, vsync: this);
   }
 
-  // Function to add selected service to Firestore
-  void addServiceToFirestore(String serviceName) {
-    // Reference to the Firestore collection where you want to store services
-    CollectionReference servicesCollection =
-        FirebaseFirestore.instance.collection('services');
-
-    // Add the selected service to Firestore with a timestamp
-    servicesCollection.add({
-      'name': serviceName,
-      'timestamp': FieldValue.serverTimestamp(),
-      // Add other properties as needed
-    }).then((_) {
-      // Service added successfully
-      print('Service added to Firestore');
-    }).catchError((error) {
-      // Handle errors here
-      print('Error adding service to Firestore: $error');
-    });
-  }
-
-  List<Service> services = [
-    Service('Initial Cleaning', 'assets/images/category1.png'),
-    Service('Basic Cleaning', 'assets/images/category2.png'),
-    Service('Deep cleaning', 'assets/images/category3.png'),
-  ];
-  List<String> service = [
-    'Initial Cleaning',
-    'Basic Cleaning',
-    'Deep cleaning'
-  ];
-  int selectedService = -1;
-
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProvider>(
-      builder: (context, value, child) {
+    return Consumer<CleaningRequestProvider>(
+      builder: (context, cleaningProvider, child) {
+        List<Service> services = cleaningProvider.services;
+        int selectedService = cleaningProvider.selectedService;
+
         return Scaffold(
           backgroundColor: Colors.white,
           body: NestedScrollView(
@@ -67,7 +37,10 @@ class _SelectServiceState extends State<SelectService>
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.only(
-                        top: 80.0, right: 20.0, left: 20.0),
+                      top: 80.0,
+                      right: 20.0,
+                      left: 20.0,
+                    ),
                     child: Text(
                       'Which service \ndo you need?',
                       style: TextStyle(
@@ -84,7 +57,7 @@ class _SelectServiceState extends State<SelectService>
               children: <Widget>[
                 Expanded(
                   child: ListView.builder(
-                    itemCount: service.length,
+                    itemCount: services.length,
                     itemBuilder: (BuildContext context, index) {
                       return GestureDetector(
                         onTap: () {
@@ -94,8 +67,11 @@ class _SelectServiceState extends State<SelectService>
                             } else {
                               selectedService = index;
                             }
-                            value.initialcleaning.text = service[index];
-                            print('controller${value.initialcleaning.text}');
+
+                            cleaningProvider
+                                .setServiceName(services[index].name);
+                            print(
+                                'controller${cleaningProvider.getServiceName()}');
                           });
                         },
                         child: Container(
@@ -132,39 +108,42 @@ class _SelectServiceState extends State<SelectService>
               ],
             ),
           ),
-          floatingActionButton: Builder(
-            builder: (BuildContext context) {
-              if (selectedService >= 0) {
-                return FloatingActionButton(
-                  onPressed: () {
-                    // Get the name of the selected service
-                    String serviceName = services[selectedService].name;
+          // floatingActionButton: Builder(
+          //   builder: (BuildContext context) {
+          //     var cleaningProvider =
+          //         Provider.of<CleaningRequestProvider>(context, listen: false);
 
-                    // Add the selected service to Firestore
-                    addServiceToFirestore(
-                      serviceName,
-                    );
+          //     if (selectedService >= 0) {
+          //       return FloatingActionButton(
+          //         onPressed: () {
+          //           String serviceName = services[selectedService].name;
 
-                    _tabController.animateTo(4);
-                  },
-                  backgroundColor: Colors.blue,
-                  child: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 20,
-                  ),
-                );
-              } else {
-                return const FloatingActionButton(
-                  onPressed: null,
-                  backgroundColor: Colors.grey,
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 20,
-                  ),
-                );
-              }
-            },
-          ),
+          //           cleaningProvider.setServiceName(serviceName);
+
+          //           // Clear previous data
+          //           cleaningProvider.clearCleaningRequest();
+
+          //           // Navigate to the Cleaning tab
+          //           _tabController.animateTo(1);
+          //         },
+          //         backgroundColor: Colors.blue,
+          //         child: const Icon(
+          //           Icons.arrow_forward_ios,
+          //           size: 20,
+          //         ),
+          //       );
+          //     } else {
+          //       return const FloatingActionButton(
+          //         onPressed: null,
+          //         backgroundColor: Colors.grey,
+          //         child: Icon(
+          //           Icons.arrow_forward_ios,
+          //           size: 20,
+          //         ),
+          //       );
+          //     }
+          //   },
+          // ),
         );
       },
     );

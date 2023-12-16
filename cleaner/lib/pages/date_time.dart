@@ -1,7 +1,9 @@
-import 'package:cleaner/pages/contact.dart';
-import 'package:cleaner/provider/auth.dart';
+// date_time_selector.dart
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cleaner/provider/cleaning_request_provider.dart';
+import 'package:cleaner/pages/contact.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DateTimeSelector extends StatefulWidget {
@@ -42,31 +44,10 @@ class _DateTimeSelectorState extends State<DateTimeSelector> {
     }
   }
 
-  // Function to add date, time, repeat, and timestamp to Firestore
-  void addDateTimeToFirestore(String date, String time, String repeat) {
-    // Reference to the Firestore collection where you want to store data
-    CollectionReference dateTimeCollection =
-        FirebaseFirestore.instance.collection('dateTime');
-
-    // Add the data to Firestore with a timestamp
-    dateTimeCollection.add({
-      'date': date,
-      'time': time,
-      'repeat': repeat,
-      'timestamp': FieldValue.serverTimestamp(),
-    }).then((_) {
-      // Data added successfully
-      print('Data added to Firestore');
-    }).catchError((error) {
-      // Handle errors here
-      print('Error adding data to Firestore: $error');
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProvider>(
-      builder: (context, value, child) {
+    return Consumer<CleaningRequestProvider>(
+      builder: (context, cleaningProvider, child) {
         return Scaffold(
           backgroundColor: Colors.white,
           body: NestedScrollView(
@@ -202,30 +183,22 @@ class _DateTimeSelectorState extends State<DateTimeSelector> {
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              // Get the selected date, time, and repeat values
-              String selectedDateString =
-                  '${selectedDate.toLocal()}'.split(' ')[0];
-              String selectedTimeString = '${selectedTime.format(context)}';
-              String selectedRepeatValue = selectedRepeat;
+          // floatingActionButton: FloatingActionButton(
+          //   onPressed: () {
+          //     String selectedDateString =
+          //         '${selectedDate.toLocal()}'.split(' ')[0];
+          //     String selectedTimeString = '${selectedTime.format(context)}';
+          //     String selectedRepeatValue = selectedRepeat;
 
-              // Add the data to Firestore
-              addDateTimeToFirestore(
-                selectedDateString,
-                selectedTimeString,
-                selectedRepeatValue,
-              );
+          //     cleaningProvider.setSelectedDate(selectedDateString);
+          //     cleaningProvider.setSelectedTime(selectedTimeString);
+          //     cleaningProvider.setSelectedRepeat(selectedRepeatValue);
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ContactPage(),
-                ),
-              );
-            },
-            child: Icon(Icons.arrow_forward),
-          ),
+          //     // Move to the next tab (CleaningPage)
+          //     cleaningProvider.setTabIndex(2);
+          //   },
+          //   child: Icon(Icons.arrow_forward),
+          // ),
         );
       },
     );
