@@ -12,7 +12,16 @@ class SelectService extends StatefulWidget {
   State<SelectService> createState() => _SelectServiceState();
 }
 
-class _SelectServiceState extends State<SelectService> {
+class _SelectServiceState extends State<SelectService>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+  }
+
   // Function to add selected service to Firestore
   void addServiceToFirestore(String serviceName) {
     // Reference to the Firestore collection where you want to store services
@@ -136,12 +145,7 @@ class _SelectServiceState extends State<SelectService> {
                       serviceName,
                     );
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CleaningPage(),
-                      ),
-                    );
+                    _tabController.animateTo(4);
                   },
                   backgroundColor: Colors.blue,
                   child: const Icon(

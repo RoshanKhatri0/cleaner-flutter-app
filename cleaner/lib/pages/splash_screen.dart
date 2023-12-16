@@ -1,4 +1,4 @@
-import 'package:cleaner/pages/select_service.dart';
+import 'package:cleaner/mytabs.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -46,7 +46,7 @@ class SplashScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SelectService(),
+                            builder: (context) => MyTabs(),
                           ),
                         );
                       },
