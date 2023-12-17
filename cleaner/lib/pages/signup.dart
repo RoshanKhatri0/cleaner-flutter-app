@@ -1,6 +1,6 @@
+import 'package:cleaner/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'login.dart'; // Import your login page
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -12,16 +12,14 @@ class _SignUpPageState extends State<SignUpPage> {
   late String password;
   late String confirmPassword;
 
-  // Regular expression for a valid email format
-  final RegExp emailRegex =
-      RegExp(r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$');
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Sign Up Page'),
+        title: Text('Sign Up'),
+        centerTitle: true,
+        backgroundColor: Colors.purple,
       ),
       body: Center(
         child: Padding(
@@ -29,89 +27,141 @@ class _SignUpPageState extends State<SignUpPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Text(
+                "Sign up",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                "Create your account",
+                style: TextStyle(fontSize: 15, color: Colors.grey[700]),
+              ),
+              const SizedBox(
+                height: 80,
+              ),
               TextField(
                 onChanged: (value) {
                   setState(() {
                     email = value;
                   });
                 },
-                decoration: InputDecoration(labelText: 'Email'),
+                decoration: InputDecoration(
+                    hintText: "Email",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18),
+                        borderSide: BorderSide.none),
+                    fillColor: Colors.purple.withOpacity(0.1),
+                    filled: true,
+                    prefixIcon: const Icon(Icons.email)),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 20),
               TextField(
                 onChanged: (value) {
                   setState(() {
                     password = value;
                   });
                 },
-                decoration: InputDecoration(labelText: 'Password'),
+                decoration: InputDecoration(
+                  hintText: "Password",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                      borderSide: BorderSide.none),
+                  fillColor: Colors.purple.withOpacity(0.1),
+                  filled: true,
+                  prefixIcon: const Icon(Icons.password),
+                ),
                 obscureText: true,
               ),
-              SizedBox(height: 10),
+              const SizedBox(
+                height: 20,
+              ),
               TextField(
                 onChanged: (value) {
                   setState(() {
                     confirmPassword = value;
                   });
                 },
-                decoration: InputDecoration(labelText: 'Confirm Password'),
+                decoration: InputDecoration(
+                  hintText: "Confirm Password",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                      borderSide: BorderSide.none),
+                  fillColor: Colors.purple.withOpacity(0.1),
+                  filled: true,
+                  prefixIcon: const Icon(Icons.password),
+                ),
                 obscureText: true,
               ),
-              SizedBox(height: 20),
+              const SizedBox(
+                height: 20,
+              ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: const StadiumBorder(),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                  backgroundColor: Colors.purple,
+                ),
                 onPressed: () async {
-                  if (password == confirmPassword &&
-                      emailRegex.hasMatch(email)) {
+                  if (!_isValidEmail(email)) {
+                    // Show a SnackBar for invalid email format
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please enter a valid email address.'),
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
+                    return;
+                  }
+
+                  if (password == confirmPassword) {
                     try {
-                      // Check if the email is already in use
-                      bool emailExists = await isEmailInUse(email);
+                      await FirebaseAuth.instance
+                          .createUserWithEmailAndPassword(
+                        email: email,
+                        password: password,
+                      );
 
-                      if (!emailExists) {
-                        // Create a new user if the email is not in use
-                        UserCredential userCredential = await FirebaseAuth
-                            .instance
-                            .createUserWithEmailAndPassword(
-                          email: email,
-                          password: password,
-                        );
-
-                        // If successful, navigate to the login page
-                        if (userCredential.user != null) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()),
+                      // Navigate to the login page after successful signup
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
+                    } catch (e) {
+                      if (e is FirebaseAuthException) {
+                        if (e.code == 'email-already-in-use') {
+                          // Show a SnackBar if the email is already in use
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text('The email address is already in use.'),
+                              duration: Duration(seconds: 1),
+                            ),
                           );
                         }
-                      } else {
-                        // Show a SnackBar for email already in use
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                'The email address is already in use. Please use a different email.'),
-                            duration: Duration(seconds: 3),
-                          ),
-                        );
                       }
-                    } catch (e) {
-                      // Handle other errors
                       print(e.toString());
                     }
                   } else {
-                    // Show a SnackBar for invalid email or mismatched passwords
+                    // Show a SnackBar that passwords do not match
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(
-                          emailRegex.hasMatch(email)
-                              ? 'Passwords do not match. Please try again.'
-                              : 'Invalid email format. Please enter a valid email address.',
-                        ),
+                        content:
+                            Text('Passwords do not match. Please try again.'),
                         duration: Duration(seconds: 1),
                       ),
                     );
                   }
                 },
-                child: Text('Sign Up'),
+                child: Text(
+                  'Sign Up',
+                  style: TextStyle(fontSize: 20),
+                ),
               ),
             ],
           ),
@@ -120,19 +170,10 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Future<bool> isEmailInUse(String email) async {
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password:
-            'randomPasswordForCheck', // Provide a random password for checking existence
-      );
-      return false; // Email doesn't exist
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
-        return true; // Email already in use
-      }
-      return false; // Other errors
-    }
+  bool _isValidEmail(String email) {
+    // Use a regular expression to check if the email is in a valid format
+    final emailRegExp =
+        RegExp(r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$');
+    return emailRegExp.hasMatch(email);
   }
 }

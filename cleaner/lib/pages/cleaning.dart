@@ -43,7 +43,7 @@ class _CleaningPageState extends State<CleaningPage> {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding:
-                        EdgeInsets.only(top: 120.0, right: 20.0, left: 20.0),
+                        EdgeInsets.only(top: 40.0, right: 20.0, left: 20.0),
                     child: Text(
                       'Where do you want \ncleaned?',
                       style: TextStyle(

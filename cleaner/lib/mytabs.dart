@@ -38,6 +38,8 @@ class _MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text('Cleaner App'),
+          centerTitle: true,
+          backgroundColor: Colors.purple,
           bottom: TabBar(
             controller: _tabController,
             tabs: [

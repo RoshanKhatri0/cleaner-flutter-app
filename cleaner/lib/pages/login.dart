@@ -17,7 +17,9 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Login Page'),
+        title: Text('Login'),
+        centerTitle: true,
+        backgroundColor: Colors.purple,
       ),
       body: Center(
         child: Padding(
@@ -25,61 +27,106 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    email = value;
-                  });
-                },
-                decoration: InputDecoration(labelText: 'Email'),
+              Column(
+                children: [
+                  Text(
+                    "Welcome Back",
+                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                  ),
+                  Text("Enter your credentials to login"),
+                ],
               ),
-              SizedBox(height: 10),
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    password = value;
-                  });
-                },
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  try {
-                    await FirebaseAuth.instance.signInWithEmailAndPassword(
-                      email: email,
-                      password: password,
-                    );
-
-                    // Navigate to the splash page upon successful login
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => SplashScreen()),
-                    );
-                  } catch (e) {
-                    print(e.toString());
-                    // Show a SnackBar with an error message
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                            'Invalid email or password. Please try again.'),
-                        duration: Duration(seconds: 1),
+              const SizedBox(height: 120),
+              Column(
+                children: [
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        email = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      hintText: "Email",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18),
+                        borderSide: BorderSide.none,
                       ),
-                    );
-                  }
-                },
-                child: Text('Login'),
-              ),
-              SizedBox(height: 10),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignUpPage()),
-                  );
-                },
-                child: Text('Don\'t have an account? Sign up'),
+                      fillColor: Colors.purple.withOpacity(0.1),
+                      filled: true,
+                      prefixIcon: const Icon(Icons.person),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        password = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      hintText: "Password",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18),
+                        borderSide: BorderSide.none,
+                      ),
+                      fillColor: Colors.purple.withOpacity(0.1),
+                      filled: true,
+                      prefixIcon: const Icon(Icons.password),
+                    ),
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        await FirebaseAuth.instance.signInWithEmailAndPassword(
+                          email: email,
+                          password: password,
+                        );
+
+                        // Navigate to the splash page upon successful login
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SplashScreen()),
+                        );
+                      } catch (e) {
+                        print(e.toString());
+                        // Show a SnackBar with an error message
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                'Invalid email or password. Please try again.'),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: const StadiumBorder(),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 40),
+                      backgroundColor: Colors.purple,
+                    ),
+                    child: Text(
+                      'Login',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignUpPage()),
+                      );
+                    },
+                    child: Text(
+                      'Don\'t have an account? Sign up',
+                      style: TextStyle(color: Colors.purple),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

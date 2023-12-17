@@ -58,7 +58,7 @@ class _DateTimeSelectorState extends State<DateTimeSelector> {
                   child: Container(
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          top: 80.0, right: 20.0, left: 20.0),
+                          top: 30.0, right: 20.0, left: 20.0),
                       child: Text(
                         'Select Date and \nTime',
                         style: TextStyle(
