@@ -47,7 +47,7 @@ class _DateTimeSelectorState extends State<DateTimeSelector> {
   @override
   Widget build(BuildContext context) {
     return Consumer<CleaningRequestProvider>(
-      builder: (context, cleaningProvider, child) {
+      builder: (context, datetime, child) {
         return Scaffold(
           backgroundColor: Colors.white,
           body: NestedScrollView(
@@ -79,6 +79,8 @@ class _DateTimeSelectorState extends State<DateTimeSelector> {
                   InkWell(
                     onTap: () {
                       _selectDate(context);
+                      datetime.datecontroller.text = selectedDate.toString();
+                      print(datetime.datecontroller.text);
                     },
                     child: Container(
                       height: 60,
@@ -98,6 +100,8 @@ class _DateTimeSelectorState extends State<DateTimeSelector> {
                   InkWell(
                     onTap: () {
                       _selectTime(context);
+                      datetime.timecontroller.text = selectedTime.toString();
+                      print(datetime.timecontroller.text);
                     },
                     child: Container(
                       height: 60,
@@ -112,73 +116,73 @@ class _DateTimeSelectorState extends State<DateTimeSelector> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  // SizedBox(height: 20.0),
 
-                  Padding(
-                    padding: EdgeInsets.only(top: 20.0, bottom: 10.0),
-                    child: Text(
-                      'Repeat',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  // Repeat Options Section
-                  Column(
-                    children: <Widget>[
-                      RadioListTile(
-                        title: Text('One Time'),
-                        value: 'One Time',
-                        groupValue: selectedRepeat,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedRepeat = value as String;
-                          });
-                        },
-                      ),
-                      RadioListTile(
-                        title: Text('Weekly'),
-                        value: 'Weekly',
-                        groupValue: selectedRepeat,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedRepeat = value as String;
-                          });
-                        },
-                      ),
-                      RadioListTile(
-                        title: Text('Bi-weekly'),
-                        value: 'Bi-weekly',
-                        groupValue: selectedRepeat,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedRepeat = value as String;
-                          });
-                        },
-                      ),
-                      RadioListTile(
-                        title: Text('Monthly'),
-                        value: 'Monthly',
-                        groupValue: selectedRepeat,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedRepeat = value as String;
-                          });
-                        },
-                      ),
-                      RadioListTile(
-                        title: Text('Bi-monthly'),
-                        value: 'Bi-monthly',
-                        groupValue: selectedRepeat,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedRepeat = value as String;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
+                  // const Padding(
+                  //   padding: EdgeInsets.only(top: 20.0, bottom: 10.0),
+                  //   child: Text(
+                  //     'Repeat',
+                  //     style: TextStyle(
+                  //       fontSize: 24,
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  // ),
+                  // // Repeat Options Section
+                  // Column(
+                  //   children: <Widget>[
+                  //     RadioListTile(
+                  //       title: Text('One Time'),
+                  //       value: 'One Time',
+                  //       groupValue: selectedRepeat,
+                  //       onChanged: (value) {
+                  //         setState(() {
+                  //           selectedRepeat = value as String;
+                  //         });
+                  //       },
+                  //     ),
+                  //     RadioListTile(
+                  //       title: Text('Weekly'),
+                  //       value: 'Weekly',
+                  //       groupValue: selectedRepeat,
+                  //       onChanged: (value) {
+                  //         setState(() {
+                  //           selectedRepeat = value as String;
+                  //         });
+                  //       },
+                  //     ),
+                  //     RadioListTile(
+                  //       title: Text('Bi-weekly'),
+                  //       value: 'Bi-weekly',
+                  //       groupValue: selectedRepeat,
+                  //       onChanged: (value) {
+                  //         setState(() {
+                  //           selectedRepeat = value as String;
+                  //         });
+                  //       },
+                  //     ),
+                  //     RadioListTile(
+                  //       title: Text('Monthly'),
+                  //       value: 'Monthly',
+                  //       groupValue: selectedRepeat,
+                  //       onChanged: (value) {
+                  //         setState(() {
+                  //           selectedRepeat = value as String;
+                  //         });
+                  //       },
+                  //     ),
+                  //     RadioListTile(
+                  //       title: Text('Bi-monthly'),
+                  //       value: 'Bi-monthly',
+                  //       groupValue: selectedRepeat,
+                  //       onChanged: (value) {
+                  //         setState(() {
+                  //           selectedRepeat = value as String;
+                  //         });
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),
@@ -195,7 +199,7 @@ class _DateTimeSelectorState extends State<DateTimeSelector> {
           //     cleaningProvider.setSelectedRepeat(selectedRepeatValue);
 
           //     // Move to the next tab (CleaningPage)
-          //     cleaningProvider.setTabIndex(2);
+          //     // cleaningProvider.setTabIndex(2);
           //   },
           //   child: Icon(Icons.arrow_forward),
           // ),

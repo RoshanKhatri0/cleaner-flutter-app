@@ -1,5 +1,6 @@
 // contact_page.dart
 
+import 'package:cleaner/pages/thank_you.dart';
 import 'package:cleaner/provider/cleaning_request_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,16 +13,32 @@ class ContactPage extends StatefulWidget {
 }
 
 class _ContactPageState extends State<ContactPage> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController locationController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Consumer<CleaningRequestProvider>(
-      builder: (context, cleaningProvider, child) {
+      builder: (context, value, child) {
         return Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              value.addInformation(
+                  value.servicecontroller.text,
+                  value.nameofroom.text,
+                  value.expensescontroller.text,
+                  value.nameController.text,
+                  value.datecontroller.text,
+                  value.timecontroller.text,
+                  value.locationController.text,
+                  value.emailController.text,
+                  value.numberofroom.text,
+                  value.phoneController.text,
+                  value.numberofbedroom.text);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ThankYou()),
+              );
+            },
+            child: Icon(Icons.arrow_circle_right),
+          ),
           backgroundColor: Colors.white,
           body: NestedScrollView(
             headerSliverBuilder:
@@ -53,25 +70,25 @@ class _ContactPageState extends State<ContactPage> {
               child: ListView(
                 children: <Widget>[
                   buildTextField(
-                    controller: nameController,
+                    controller: value.nameController,
                     labelText: 'Name',
                     keyboardType: TextInputType.text,
                   ),
                   SizedBox(height: 20.0),
                   buildTextField(
-                    controller: emailController,
+                    controller: value.emailController,
                     labelText: 'Email',
                     keyboardType: TextInputType.emailAddress,
                   ),
                   SizedBox(height: 20.0),
                   buildTextField(
-                    controller: phoneController,
+                    controller: value.phoneController,
                     labelText: 'Phone Number',
                     keyboardType: TextInputType.phone,
                   ),
                   SizedBox(height: 20.0),
                   buildTextField(
-                    controller: locationController,
+                    controller: value.locationController,
                     labelText: 'Location',
                     keyboardType: TextInputType.text,
                   ),

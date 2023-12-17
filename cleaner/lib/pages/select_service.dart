@@ -53,59 +53,49 @@ class _SelectServiceState extends State<SelectService>
                 ),
               ];
             },
-            body: Column(
-              children: <Widget>[
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: services.length,
-                    itemBuilder: (BuildContext context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (selectedService == index) {
-                              selectedService = -1;
-                            } else {
-                              selectedService = index;
-                            }
-
-                            cleaningProvider
-                                .setServiceName(services[index].name);
-                            print(
-                                'controller${cleaningProvider.getServiceName()}');
-                          });
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 8.0),
-                          padding: const EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                            color: selectedService == index
-                                ? Colors.blue.shade50
-                                : Colors.grey.shade200,
-                            border: Border.all(
-                              color: selectedService == index
-                                  ? Colors.blue
-                                  : Colors.blue.withOpacity(0),
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(40.0),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Image.asset(services[index].imageURL, height: 80),
-                              const SizedBox(height: 20),
-                              Text(
-                                services[index].name,
-                                style: const TextStyle(fontSize: 20),
-                              ),
-                            ],
-                          ),
+            body: SingleChildScrollView(
+              child: Column(
+                  children: List.generate(
+                cleaningProvider.service.length,
+                (index) => GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      cleaningProvider.servicecontroller.text =
+                          cleaningProvider.service[index];
+                      print(cleaningProvider.servicecontroller.text);
+                    });
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    padding: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: selectedService == index
+                          ? Colors.blue.shade50
+                          : Colors.grey.shade200,
+                      border: Border.all(
+                        color: selectedService == index
+                            ? Colors.blue
+                            : Colors.blue.withOpacity(0),
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Image.asset(cleaningProvider.servicespic[index],
+                            height: 80),
+                        const SizedBox(height: 20),
+                        Text(
+                          cleaningProvider.service[index],
+                          style: const TextStyle(fontSize: 20),
                         ),
-                      );
-                    },
+                      ],
+                    ),
                   ),
                 ),
-              ],
+              )),
             ),
           ),
           // floatingActionButton: Builder(

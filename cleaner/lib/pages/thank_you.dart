@@ -1,3 +1,4 @@
+import 'package:cleaner/mytabs.dart';
 import 'package:cleaner/pages/select_service.dart';
 import 'package:flutter/material.dart';
 
@@ -60,7 +61,7 @@ class ThankYou extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SelectService(),
+              builder: (context) => MyTabs(),
             ),
           );
         },
