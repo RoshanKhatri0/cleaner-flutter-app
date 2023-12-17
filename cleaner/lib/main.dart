@@ -1,5 +1,5 @@
 import 'package:cleaner/firebase_options.dart';
-import 'package:cleaner/pages/splash_screen.dart';
+import 'package:cleaner/pages/login.dart';
 import 'package:cleaner/provider/cleaning_request_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +17,18 @@ void main() async {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
+        home: AuthenticationWrapper(),
       ),
     ),
   );
+}
+
+class AuthenticationWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: LoginPage(), // Always navigate to the login page
+    );
+  }
 }

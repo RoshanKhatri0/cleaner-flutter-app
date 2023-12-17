@@ -1,11 +1,13 @@
 import 'package:cleaner/pages/cleaning.dart';
 import 'package:cleaner/pages/contact.dart';
 import 'package:cleaner/pages/date_time.dart';
+import 'package:cleaner/pages/login.dart';
 import 'package:cleaner/pages/select_service.dart';
 import 'package:cleaner/provider/cleaning_request_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MyTabs extends StatefulWidget {
   @override
@@ -34,6 +36,7 @@ class _MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
       create: (context) => CleaningRequestProvider(),
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text('Cleaner App'),
           bottom: TabBar(
             controller: _tabController,
@@ -44,6 +47,18 @@ class _MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
               Tab(text: 'Contact'),
             ],
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              },
+            ),
+          ],
         ),
         body: TabBarView(
           controller: _tabController,
